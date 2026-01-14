@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Plate Recognition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="file"] {
+            padding: 10px;
+            border: 2px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .result img {
+            max-width: 100%;
+            height: auto;
+        }
+        .result p {
+            margin-top: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>License Plate Recognition</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" id="imageInput" name="image" accept="image/*" required><br><br>
+            <button type="submit" class="btn">Upload Image</button>
+        </form>
+
+        <div class="result" id="result" style="display: none;">
+            <h2>Processed Result</h2>
+            <img id="processedImage" src="" alt="Processed Image">
+            <p id="plateText"></p>
+            <p id="region"></p>
+            <p id="confidence"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            let formData = new FormData();
+            let imageInput = document.getElementById('imageInput');
+            formData.append('image', imageInput.files[0]);
+
+            fetch('/api/process-image', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    document.getElementById('processedImage').src = data.processed_image;
+                    document.getElementById('plateText').textContent = 'Detected Plates: ' + data.detected_plates.join(', ');
+                    document.getElementById('region').textContent = 'Regions: ' + data.region.join(', ');
+                    document.getElementById('confidence').textContent = 'Confidence: ' + data.conf.join(', ');
+                    document.getElementById('result').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error during image processing:', error);
+                alert('An error occurred while processing the image.');
+            });
+        });
+    </script>
+</body>
+</html>

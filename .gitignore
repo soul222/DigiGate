@@ -1,0 +1,9 @@
+node_modules/
+__pycache__/
+ocr-service/python/menv/
+**/menv/
+*.dll
+*.pyd
+
+.env
+**/.env
