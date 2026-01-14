@@ -25,7 +25,7 @@ Ikuti langkah-langkah berikut untuk menjalankan sistem di komputer lokal Anda.
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/username/digigate.git
+git clone https://github.com/soul222/DigiGate.git
 cd digigate
 ```
 
